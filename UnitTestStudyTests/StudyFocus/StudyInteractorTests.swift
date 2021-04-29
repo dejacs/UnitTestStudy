@@ -8,16 +8,14 @@
 import XCTest
 
 private class StudyServiceMock: StudyServicing {
-    // MARK: - Fetch
-    private(set) var fetchEndpointCompletionCallsCount = 0
-    private(set) var fetchEndpointCompletionReceivedInvocations: [(endpoint: EndpointProtocol, completion: (Result<StudyModel, APIError>) -> Void)] = []
-    
-    var fetchEndpointCompletionClosure: ((EndpointProtocol, @escaping(Result<StudyModel, APIError>) -> Void) -> Void)?
+    var fetchEndpointCompletion: Result<StudyModel, APIError>?
     
     func fetch(endpoint: EndpointProtocol, completion: @escaping(Result<StudyModel, APIError>) -> Void) {
-        fetchEndpointCompletionCallsCount += 1
-        fetchEndpointCompletionReceivedInvocations.append((endpoint: endpoint, completion: completion))
-        fetchEndpointCompletionClosure?(endpoint, completion)
+        guard let fetchEndpointCompletion = fetchEndpointCompletion else {
+            XCTFail("fetchEndpointCompletion should not be nil")
+            return
+        }
+        completion(fetchEndpointCompletion)
     }
 }
 
@@ -48,16 +46,25 @@ final class StudyInteractorTests: XCTestCase {
     
     func testFetch_WhenTextNotNilAndFeatureFlagEnabled_ShouldPresentStudyWithSuccess() {
 //        system under testing
+        let studyModel = StudyModelMock.default
         sut.featureFlag = true
         let texto = "Teste"
         
-        service.fetchEndpointCompletionClosure = success
+        service.fetchEndpointCompletion = .success(studyModel)
         sut.fetch(text: texto)
         
         XCTAssertEqual(presenter.presentStudyCount, 1)
         XCTAssertFalse(presenter.presentStudyInvocations.isEmpty)
-        XCTAssertEqual(presenter.presentStudyInvocations.first, successResponse())
+        XCTAssertEqual(presenter.presentStudyInvocations.first, studyModel)
     }
+}
+
+enum StudyModelMock {
+    static let `default` = StudyModel(
+        name: "Lindinha",
+        birthDate: "01/04/2002",
+        profileImage: "http.."
+    )
 }
 
 private extension StudyInteractorTests {
