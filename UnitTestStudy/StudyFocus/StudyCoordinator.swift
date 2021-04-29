@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 
-enum StudyAction {
-    case open, close
+enum StudyAction: Equatable {
+    case open(featureFlag: Bool)
+    case close
 }
 
 protocol StudyCoordinating: AnyObject {
@@ -24,9 +25,8 @@ final class StudyCoordinator {
 extension StudyCoordinator: StudyCoordinating {
     func perform(action: StudyAction) {
         switch action {
-        case .open:
-            let featureFlag: String = "está habilitada"
-            if featureFlag == "está habilitada" {
+        case .open(let featureFlag):
+            if featureFlag {
                 viewController?.present(NewStudyViewController(), animated: true)
             } else {
                 viewController?.dismiss(animated: true)

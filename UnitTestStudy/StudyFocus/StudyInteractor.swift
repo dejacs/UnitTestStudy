@@ -9,7 +9,7 @@ import Foundation
 
 protocol StudyInteracting: AnyObject {
     func fetch(text: String?)
-    func open(flag: Bool)
+    func open()
 }
 
 final class StudyInteractor {
@@ -26,24 +26,28 @@ final class StudyInteractor {
 
 extension StudyInteractor: StudyInteracting {
     func fetch(text: String?) {
+        guard featureFlag else {
+            presenter.presentError()
+            return
+        }
+        
         if let unwrappedText = text {
             let endpoint = StudyEndpoint.fetch(text: unwrappedText)
             service.fetch(endpoint: endpoint) { [weak self] result in
                 switch result {
                 case .success(let studyModel):
-                    if self?.featureFlag ?? false {
-                        self?.presenter.present(study: studyModel)
-                    }
+                    self?.presenter.present(study: studyModel)
+                    
                 case .failure:
-                    break
+                    self?.presenter.presentError()
                 }
             }
         }
     }
     
-    func open(flag: Bool) {
-        if flag {
-            presenter.nextStep(action: .open)
+    func open() {
+        if featureFlag {
+            presenter.nextStep(action: .open(featureFlag: featureFlag))
         } else {
             presenter.nextStep(action: .close)
         }

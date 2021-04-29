@@ -10,6 +10,7 @@ import Foundation
 protocol StudyPresenting: AnyObject {
     var viewController: StudyDisplaying? { get set }
     func present(study: StudyModel)
+    func presentError()
     func nextStep(action: StudyAction)
 }
 
@@ -31,5 +32,9 @@ extension StudyPresenter: StudyPresenting {
     
     func nextStep(action: StudyAction) {
         coordinator.perform(action: action)
+    }
+    
+    func presentError() {
+        
     }
 }

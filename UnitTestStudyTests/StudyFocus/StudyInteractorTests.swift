@@ -7,7 +7,15 @@
 @testable import UnitTestStudy
 import XCTest
 
-private class StudyServiceMock: StudyServicing {
+enum StudyModelMock {
+    static let `default` = StudyModel(
+        name: "Lindinha",
+        birthDate: "01/04/2002",
+        profileImage: "http.."
+    )
+}
+
+private final class StudyServiceMock: StudyServicing {
     var fetchEndpointCompletion: Result<StudyModel, APIError>?
     
     func fetch(endpoint: EndpointProtocol, completion: @escaping(Result<StudyModel, APIError>) -> Void) {
@@ -19,19 +27,27 @@ private class StudyServiceMock: StudyServicing {
     }
 }
 
-private class StudyPresenterSpy: StudyPresenting {
+private final class StudyPresenterSpy: StudyPresenting {
     var viewController: StudyDisplaying?
     
-    var presentStudyCount = 0
-    var presentStudyInvocations: [StudyModel] = []
+    private(set) var presentStudyCount = 0
+    private(set) var presentStudyInvocations: [StudyModel] = []
+    private(set) var presentErrorCount = 0
+    private(set) var nextStepActionCount = 0
+    private(set) var nextStepActionInvocations: [StudyAction] = []
     
     func present(study: StudyModel) {
         presentStudyCount += 1
         presentStudyInvocations.append(study)
     }
     
+    func presentError() {
+        presentErrorCount += 1
+    }
+    
     func nextStep(action: StudyAction) {
-        
+        nextStepActionCount += 1
+        nextStepActionInvocations.append(action)
     }
 }
 
@@ -57,37 +73,43 @@ final class StudyInteractorTests: XCTestCase {
         XCTAssertFalse(presenter.presentStudyInvocations.isEmpty)
         XCTAssertEqual(presenter.presentStudyInvocations.first, studyModel)
     }
-}
-
-enum StudyModelMock {
-    static let `default` = StudyModel(
-        name: "Lindinha",
-        birthDate: "01/04/2002",
-        profileImage: "http.."
-    )
-}
-
-private extension StudyInteractorTests {
-    func successResponse() -> StudyModel? {
-        let asset = NSDataAsset(name: "study-model", bundle: Bundle.main)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+    
+    func testFetch_WhenTextNotNilAndFeatureFlagDisabled_ShouldPresentError() {
+//        system under testing
+        let studyModel = StudyModelMock.default
+        sut.featureFlag = false
+        let texto = "Teste"
         
-        do {
-            let response = try decoder.decode(StudyModel.self, from: asset!.data)
-            return response
-        } catch { return nil }
+        service.fetchEndpointCompletion = .success(studyModel)
+        sut.fetch(text: texto)
+        
+        XCTAssertEqual(presenter.presentErrorCount, 1)
     }
     
-    func success(endpoint: EndpointProtocol, completion: @escaping(Result<StudyModel, APIError>) -> Void) {
-        guard let studyModel = successResponse() else {
-            completion(.failure(.genericError))
-            return
-        }
-        completion(.success(studyModel))
+    func testFetch_WhenTextNotNilAndFeatureFlagEnabled_ShouldPresentStudyWithError() {
+//        system under testing
+        sut.featureFlag = true
+        let texto = "Teste"
+        
+        service.fetchEndpointCompletion = .failure(.genericError)
+        sut.fetch(text: texto)
+        
+        XCTAssertEqual(presenter.presentErrorCount, 1)
     }
     
-    func failure(endpoint: EndpointProtocol, completion: @escaping(Result<StudyModel, APIError>) -> Void) {
-        completion(.failure(APIError.genericError))
+    func testOpen_WhenFlagIsTrue_ShouldPresentNextStepWithOpenAction() {
+        sut.featureFlag = true
+        sut.open()
+        
+        XCTAssertEqual(presenter.nextStepActionCount, 1)
+        XCTAssertEqual(presenter.nextStepActionInvocations.first, .open(featureFlag: true))
+    }
+    
+    func testOpen_WhenFlagIsFalse_ShouldPresentNextStepWithCloseAction() {
+        sut.featureFlag = false
+        sut.open()
+        
+        XCTAssertEqual(presenter.nextStepActionCount, 1)
+        XCTAssertEqual(presenter.nextStepActionInvocations.first, .close)
     }
 }
