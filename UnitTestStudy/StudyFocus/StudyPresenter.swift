@@ -35,6 +35,6 @@ extension StudyPresenter: StudyPresenting {
     }
     
     func presentError() {
-        
+        viewController?.displayError()
     }
 }

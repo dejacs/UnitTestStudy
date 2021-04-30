@@ -16,7 +16,7 @@ final class StudyInteractor {
     private let presenter: StudyPresenting
     private let service: StudyServicing
     
-    var featureFlag: Bool = false
+    var featureFlag: Bool = true
     
     init(presenter: StudyPresenting, service: StudyServicing) {
         self.presenter = presenter

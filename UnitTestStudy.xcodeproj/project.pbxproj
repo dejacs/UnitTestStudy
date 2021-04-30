@@ -15,6 +15,7 @@
 		1D6372A62629FE6B00E26668 /* StudyEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D6372A52629FE6B00E26668 /* StudyEndpoint.swift */; };
 		1D6372B1262A006600E26668 /* StudyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D6372B0262A006600E26668 /* StudyModel.swift */; };
 		1D6372B6262A03CC00E26668 /* NewStudyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D6372B5262A03CC00E26668 /* NewStudyViewController.swift */; };
+		1DA299FE263C37C500C9F545 /* ViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA299FD263C37C500C9F545 /* ViewControllerSpy.swift */; };
 		1DCCBF8A2629B3E600F0D474 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCCBF892629B3E600F0D474 /* AppDelegate.swift */; };
 		1DCCBF8C2629B3E600F0D474 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCCBF8B2629B3E600F0D474 /* SceneDelegate.swift */; };
 		1DCCBF8E2629B3E600F0D474 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCCBF8D2629B3E600F0D474 /* ViewController.swift */; };
@@ -51,6 +52,7 @@
 		1D6372A52629FE6B00E26668 /* StudyEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyEndpoint.swift; sourceTree = "<group>"; };
 		1D6372B0262A006600E26668 /* StudyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyModel.swift; sourceTree = "<group>"; };
 		1D6372B5262A03CC00E26668 /* NewStudyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewStudyViewController.swift; sourceTree = "<group>"; };
+		1DA299FD263C37C500C9F545 /* ViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSpy.swift; sourceTree = "<group>"; };
 		1DCCBF862629B3E600F0D474 /* UnitTestStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitTestStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DCCBF892629B3E600F0D474 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1DCCBF8B2629B3E600F0D474 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +109,14 @@
 			path = StudyFocus;
 			sourceTree = "<group>";
 		};
+		1DA299FC263C37AA00C9F545 /* Spies */ = {
+			isa = PBXGroup;
+			children = (
+				1DA299FD263C37C500C9F545 /* ViewControllerSpy.swift */,
+			);
+			path = Spies;
+			sourceTree = "<group>";
+		};
 		1DCCBF7D2629B3E600F0D474 = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +156,7 @@
 		1DCCBFA22629B3E700F0D474 /* UnitTestStudyTests */ = {
 			isa = PBXGroup;
 			children = (
+				1DA299FC263C37AA00C9F545 /* Spies */,
 				1D6372832629F6E100E26668 /* StudyFocus */,
 				1DCCBFA32629B3E700F0D474 /* UnitTestStudyTests.swift */,
 				1DCCBFA52629B3E700F0D474 /* Info.plist */,
@@ -380,6 +391,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D6372852629F70500E26668 /* StudyInteractorTests.swift in Sources */,
+				1DA299FE263C37C500C9F545 /* ViewControllerSpy.swift in Sources */,
 				1DCCBFA42629B3E700F0D474 /* UnitTestStudyTests.swift in Sources */,
 				1D6372922629F72700E26668 /* StudyCoordinatorTests.swift in Sources */,
 				1D63728D2629F71400E26668 /* StudyPresenterTests.swift in Sources */,

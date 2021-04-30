@@ -12,6 +12,7 @@ protocol StudyDisplaying: AnyObject {
     func display(name: String)
     func display(birthDate: String)
     func display(image: String)
+    func displayError()
 }
 
 final class StudyViewController: UIViewController {
@@ -35,6 +36,10 @@ extension StudyViewController: StudyDisplaying {
     }
     
     func display(image: String) {
+        
+    }
+    
+    func displayError() {
         
     }
 }
